@@ -38,11 +38,9 @@ public class TransportPlanService {
 
 	public void registerExpectedDelay(Long planId, Long milestoneId, int expectedDelay) {
 
-		// 1. Validate transport plan exists
 		TransportPlan plan = transportPlanRepository.findById(planId)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-		// 2. Validate milestone exists and belongs to plan
 		Milestone milestone = milestoneRepository.findById(milestoneId)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
