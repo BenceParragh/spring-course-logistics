@@ -10,11 +10,14 @@ import org.springframework.web.server.ResponseStatusException;
 
 import hu.cubix.logistics.bencepar.config.LogisticsConfigurationProperties;
 import hu.cubix.logistics.bencepar.config.LogisticsConfigurationProperties.Delay.Penalty;
+import hu.cubix.logistics.bencepar.model.Address;
 import hu.cubix.logistics.bencepar.model.Milestone;
 import hu.cubix.logistics.bencepar.model.Section;
 import hu.cubix.logistics.bencepar.model.TransportPlan;
+import hu.cubix.logistics.bencepar.repository.AddressRepository;
 import hu.cubix.logistics.bencepar.repository.MilestoneRepository;
 import hu.cubix.logistics.bencepar.repository.TransportPlanRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -29,14 +32,43 @@ public class TransportPlanService {
 	@Autowired
 	private MilestoneRepository milestoneRepository;
 	
+	@Autowired
+	private AddressRepository addressRepository;
+	
+//	@Transactional
+//	public TransportPlan create(TransportPlan transportPlan) {
+//		transportPlan.setPlanId(null);
+//		return transportPlanRepository.save(transportPlan);
+//
+//	}
+	
 	@Transactional
 	public TransportPlan create(TransportPlan transportPlan) {
-		transportPlan.setPlanId(null);
-		return transportPlanRepository.save(transportPlan);
-
+	    transportPlan.setPlanId(null);
+	    
+	    for (Section section : transportPlan.getSections()) {
+	        if (section.getStartMilestone().getAddressId() != null) {
+	            Address startAddress = addressRepository.findById(section.getStartMilestone().getAddressId())
+	                .orElseThrow(() -> new EntityNotFoundException());
+	            section.getStartMilestone().setAddress(startAddress);
+	            section.getStartMilestone().setAddressId(null);
+	        }
+	        
+	        if (section.getEndMilestone().getAddressId() != null) {
+	            Address endAddress = addressRepository.findById(section.getEndMilestone().getAddressId())
+	                .orElseThrow(() -> new EntityNotFoundException());
+	            section.getEndMilestone().setAddress(endAddress);
+	            section.getEndMilestone().setAddressId(null);
+	        }
+	        
+	        section.setTransportPlan(transportPlan);
+	    }
+	    
+	    return transportPlanRepository.saveAndFlush(transportPlan);
 	}
 
-	public void registerExpectedDelay(Long planId, Long milestoneId, int expectedDelay) {
+	@Transactional
+	public TransportPlan registerExpectedDelay(Long planId, Long milestoneId, int expectedDelay) {
 
 		TransportPlan plan = transportPlanRepository.findById(planId)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -49,13 +81,14 @@ public class TransportPlanService {
 		}
 
 		milestone.setPlannedTime(milestone.getPlannedTime().plusMinutes(expectedDelay));
+		milestone.setExpectedDelay(expectedDelay);
 
 		addDelayToNextMilestone(plan, milestone, expectedDelay);
 
 		double penaltyPercent = calculatePenaltyPercent(expectedDelay);
 		plan.setExpectedIncome(plan.getExpectedIncome() * (1 - penaltyPercent / 100.0));
 
-		transportPlanRepository.save(plan);
+		return transportPlanRepository.save(plan);
 	}
 
 	private boolean isMilestoneInPlan(TransportPlan plan, Milestone milestone) {

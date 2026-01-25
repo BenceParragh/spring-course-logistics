@@ -2,6 +2,7 @@ package hu.cubix.logistics.bencepar.model;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -14,7 +15,7 @@ public class TransportPlan {
 	@GeneratedValue
 	private Long planId;
 	private double expectedIncome;
-	@OneToMany(mappedBy = "transportPlan")
+	@OneToMany(mappedBy = "transportPlan", cascade = CascadeType.ALL)
 	private List<Section> sections;
 
 	public TransportPlan() {

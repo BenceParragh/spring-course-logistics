@@ -1,5 +1,7 @@
 package hu.cubix.logistics.bencepar.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +22,8 @@ public class Address {
 	private Double latitude;
 	private Double longitude;
 
-	@OneToOne
+	@OneToOne(mappedBy = "address")
+	@JsonIgnore
 	private Milestone milestone;
 
 	public Address() {

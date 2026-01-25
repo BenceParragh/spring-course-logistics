@@ -16,6 +16,7 @@ import hu.cubix.logistics.bencepar.mapper.MilestoneMapper;
 import hu.cubix.logistics.bencepar.mapper.TransportPlanMapper;
 import hu.cubix.logistics.bencepar.model.TransportPlan;
 import hu.cubix.logistics.bencepar.service.TransportPlanService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @RestController
@@ -49,6 +50,7 @@ public class TransportPlanController {
 	}
 
 	@PostMapping("/{planId}/delay")
+	@Transactional
 	public ResponseEntity<Void> registerExpectedDelay(@PathVariable Long planId,
 			@RequestBody @Valid MilestoneDto milestoneDto) {
 

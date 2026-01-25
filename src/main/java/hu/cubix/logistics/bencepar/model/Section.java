@@ -1,8 +1,12 @@
 package hu.cubix.logistics.bencepar.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
@@ -12,12 +16,16 @@ public class Section {
 	@Id
 	@GeneratedValue
 	private long sectionId;
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "start_milestone_id")
 	private Milestone startMilestone;
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "end_milestone_id")
 	private Milestone endMilestone;
 	private int sectionOrder;
 	@ManyToOne
+	@JoinColumn(name = "transport_plan_id")
+	@JsonIgnore
 	private TransportPlan transportPlan;
 
 	public Section() {

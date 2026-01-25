@@ -18,6 +18,8 @@ public class Milestone {
 	private LocalDateTime plannedTime;
 	private int expectedDelay;
 
+	private Long addressId;
+
 	public Milestone() {
 		super();
 	}
@@ -59,6 +61,14 @@ public class Milestone {
 
 	public void setExpectedDelay(int expectedDelay) {
 		this.expectedDelay = expectedDelay;
+	}
+
+	public Long getAddressId() {
+		return addressId;
+	}
+
+	public void setAddressId(Long addressId) {
+		this.addressId = addressId;
 	}
 
 }
