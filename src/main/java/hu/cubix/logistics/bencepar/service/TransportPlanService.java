@@ -52,10 +52,8 @@ public class TransportPlanService {
 
 		milestone.setPlannedTime(milestone.getPlannedTime().plusMinutes(expectedDelay));
 
-		// 4. Propagate delay
 		addDelayToNextMilestone(plan, milestone, expectedDelay);
 
-		// 5. Apply income penalty
 		double penaltyPercent = calculatePenaltyPercent(expectedDelay);
 		plan.setExpectedIncome(plan.getExpectedIncome() * (1 - penaltyPercent / 100.0));
 
@@ -71,18 +69,15 @@ public class TransportPlanService {
 	private void addDelayToNextMilestone(TransportPlan plan, Milestone milestone, int expectedDelay) {
 		List<Section> sections = plan.getSections();
 
-		// Find affecting sections
 		for (int i = 0; i < sections.size(); i++) {
 			Section currentSection = sections.get(i);
 
 			if (currentSection.getStartMilestone().equals(milestone)) {
-				// Start milestone → delay end milestone of this section
 				currentSection.getEndMilestone()
 						.setPlannedTime(currentSection.getEndMilestone().getPlannedTime().plusMinutes(expectedDelay));
 			}
 
 			if (currentSection.getEndMilestone().equals(milestone)) {
-				// End milestone → delay start of next section (if exists)
 				if (i + 1 < sections.size()) {
 					Section nextSection = sections.get(i + 1);
 					nextSection.getStartMilestone().setPlannedTime(
@@ -102,7 +97,7 @@ public class TransportPlanService {
 			return appliedPenalty.getPenalty60min();
 		if (expectedDelay <= 120)
 			return appliedPenalty.getPenalty120min();
-		return appliedPenalty.getPenalty120min(); // Cap at max
+		return appliedPenalty.getPenalty120min();
 	}
 
 }
