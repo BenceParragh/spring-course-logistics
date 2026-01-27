@@ -103,16 +103,18 @@ public class TransportPlanService {
 		for (int i = 0; i < sections.size(); i++) {
 			Section currentSection = sections.get(i);
 
-			if (currentSection.getStartMilestone().equals(milestone)) {
+			if (currentSection.getStartMilestone().getMilestoneId().equals(milestone.getMilestoneId())) {
 				currentSection.getEndMilestone()
 						.setPlannedTime(currentSection.getEndMilestone().getPlannedTime().plusMinutes(expectedDelay));
+				currentSection.getEndMilestone().setExpectedDelay(expectedDelay);
 			}
 
-			if (currentSection.getEndMilestone().equals(milestone)) {
+			if (currentSection.getEndMilestone().getMilestoneId().equals(milestone.getMilestoneId())) {
 				if (i + 1 < sections.size()) {
 					Section nextSection = sections.get(i + 1);
 					nextSection.getStartMilestone().setPlannedTime(
 							nextSection.getStartMilestone().getPlannedTime().plusMinutes(expectedDelay));
+					nextSection.getStartMilestone().setExpectedDelay(expectedDelay);
 				}
 			}
 		}

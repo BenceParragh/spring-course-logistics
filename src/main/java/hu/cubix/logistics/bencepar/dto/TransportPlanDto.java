@@ -7,14 +7,14 @@ import hu.cubix.logistics.bencepar.model.Section;
 public class TransportPlanDto {
 
 	private Long planId;
-	private double expectedIncome;
+	private Double expectedIncome;
 
 	private List<Section> sections;
 
 	public TransportPlanDto() {
 	}
 
-	public TransportPlanDto(Long planId, double expectedIncome, List<Section> sections) {
+	public TransportPlanDto(Long planId, Double expectedIncome, List<Section> sections) {
 		this.planId = planId;
 		this.expectedIncome = expectedIncome;
 		this.sections = sections;
@@ -28,11 +28,11 @@ public class TransportPlanDto {
 		this.planId = planId;
 	}
 
-	public double getExpectedIncome() {
+	public Double getExpectedIncome() {
 		return expectedIncome;
 	}
 
-	public void setExpectedIncome(double expectedIncome) {
+	public void setExpectedIncome(Double expectedIncome) {
 		this.expectedIncome = expectedIncome;
 	}
 

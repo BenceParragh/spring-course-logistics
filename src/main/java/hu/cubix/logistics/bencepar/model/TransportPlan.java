@@ -14,14 +14,14 @@ public class TransportPlan {
 	@Id
 	@GeneratedValue
 	private Long planId;
-	private double expectedIncome;
+	private Double expectedIncome;
 	@OneToMany(mappedBy = "transportPlan", cascade = CascadeType.ALL)
 	private List<Section> sections;
 
 	public TransportPlan() {
 	}
 
-	public TransportPlan(Long expectedIncome, List<Section> sections) {
+	public TransportPlan(Double expectedIncome, List<Section> sections) {
 		super();
 		this.expectedIncome = expectedIncome;
 		this.sections = sections;
@@ -35,11 +35,11 @@ public class TransportPlan {
 		this.planId = planId;
 	}
 
-	public double getExpectedIncome() {
+	public Double getExpectedIncome() {
 		return expectedIncome;
 	}
 
-	public void setExpectedIncome(double expectedIncome) {
+	public void setExpectedIncome(Double expectedIncome) {
 		this.expectedIncome = expectedIncome;
 	}
 

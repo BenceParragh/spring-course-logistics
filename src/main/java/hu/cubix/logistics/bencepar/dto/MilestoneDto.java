@@ -25,6 +25,13 @@ public class MilestoneDto {
 		this.plannedTime = plannedTime;
 		this.expectedDelay = expectedDelay;
 	}
+	
+	
+
+	public MilestoneDto(Long milestoneId, int expectedDelay) {
+		this.milestoneId = milestoneId;
+		this.expectedDelay = expectedDelay;
+	}
 
 	public Long getMilestoneId() {
 		return milestoneId;
